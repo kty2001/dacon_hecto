@@ -1,7 +1,7 @@
 # Ignore Files & Folders
 
-dataset
+dataset/*
 !dataset/.gitkeep
-!dataset/sample_submission.csv
+!dataset/*.csv
 
 *.pth
