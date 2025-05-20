@@ -3,3 +3,5 @@
 dataset
 !dataset/.gitkeep
 !dataset/*.csv
+
+*.pth
