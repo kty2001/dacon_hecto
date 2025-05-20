@@ -1,62 +1,123 @@
-model = BaseModel(num_classes=len(class_names)).to(device)
-best_logloss = float('inf')
+import os
+import argparse
 
-# 손실 함수
-criterion = nn.CrossEntropyLoss()
+import numpy as np
+import pandas as pd
 
-# 옵티마이저
-optimizer = optim.Adam(model.parameters(), lr=CFG['LEARNING_RATE'])
+import torch
+from torch import nn
+import lightning as L
+from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
+from lightning.pytorch.loggers import WandbLogger
 
-# 학습 및 검증 루프
-for epoch in range(CFG['EPOCHS']):
-    # Train
-    model.train()
-    train_loss = 0.0
-    for images, labels in tqdm(train_loader, desc=f"[Epoch {epoch+1}/{CFG['EPOCHS']}] Training"):
-        images, labels = images.to(device), labels.to(device)
-        optimizer.zero_grad()
-        outputs = model(images)  # logits
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.item()
+from src.dataset import LightningDataModule
+from src.model import create_model
+from src.utils import CFG, seed_everything
 
-    avg_train_loss = train_loss / len(train_loader)
 
-    # Validation
-    model.eval()
-    val_loss = 0.0
-    correct = 0
-    total = 0
-    all_probs = []
-    all_labels = []
+class ClassficationModel(L.LightningModule):
+    def __init__(self,model, batch_size: int = 64):
+        super().__init__()
+        self.model = model
+        self.batch_size = batch_size
+        self.loss_fn = nn.CrossEntropyLoss()
+        self.losses = []
+        self.labels = []
+        self.predictions = []
 
-    with torch.no_grad():
-        for images, labels in tqdm(val_loader, desc=f"[Epoch {epoch+1}/{CFG['EPOCHS']}] Validation"):
-            images, labels = images.to(device), labels.to(device)
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            val_loss += loss.item()
+    def forward(self, inputs):
+        return self.model(inputs)
 
-            # Accuracy
-            _, preds = torch.max(outputs, 1)
-            correct += (preds == labels).sum().item()
-            total += labels.size(0)
+    def training_step(self, batch, batch_idx):
+        inputs, target = batch
+        output = self.model(inputs)
+        loss = self.loss_fn(output, target)
+        self.log('train_loss', loss)
+        return loss
+    
+    def validation_step(self, batch, batch_idx):
+        inputs, target = batch
+        output = self.model(inputs)
+        loss =  self.loss_fn(output, target)
+        _, predictions = torch.max(output, 1)
 
-            # LogLoss
-            probs = F.softmax(outputs, dim=1)
-            all_probs.extend(probs.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
+        target_np = target.detach().cpu().numpy()
+        predict_np = predictions.detach().cpu().numpy()
+        
+        self.losses.append(loss)
+        self.labels.append(np.int16(target_np))
+        self.predictions.append(np.int16(predict_np))
+        self.log('valid_loss', loss)
+        return loss
+    
+    def on_validation_epoch_end(self):
+        labels = np.concatenate(np.array(self.labels, dtype=object))
+        predictions = np.concatenate(np.array(self.predictions, dtype=object))
+        acc = sum(labels == predictions)/len(labels)
 
-    avg_val_loss = val_loss / len(val_loader)
-    val_accuracy = 100 * correct / total
-    val_logloss = log_loss(all_labels, all_probs, labels=list(range(len(class_names))))
+        labels = labels.tolist()
+        predictions = predictions.tolist()
+        loss = sum(self.losses)/len(self.losses)
 
-    # 결과 출력
-    print(f"Train Loss : {avg_train_loss:.4f} || Valid Loss : {avg_val_loss:.4f} | Valid Accuracy : {val_accuracy:.4f}%")
+        self.log('val_epoch_acc', acc)
+        self.log('val_epoch_loss', loss)
+        
+        self.losses.clear()
+        self.labels.clear()
+        self.predictions.clear()
+    
+    def test_step(self, batch, batch_idx):
+        inputs, target = batch
+        output = self.model(inputs)
+        loss =  self.loss_fn(output, target)
+        _, predictions = torch.max(output, 1)
 
-    # Best model 저장
-    if val_logloss < best_logloss:
-        best_logloss = val_logloss
-        torch.save(model.state_dict(), f'./outpus/weights/best_model.pth')
-        print(f"📦 Best model saved at epoch {epoch+1} (logloss: {val_logloss:.4f})")
+        target_np = target.detach().cpu().numpy()
+        predict_np = predictions.detach().cpu().numpy()
+        
+        self.losses.append(loss)
+        self.labels.append(np.int16(target_np))
+        self.predictions.append(np.int16(predict_np))
+        self.log('test_loss', loss)
+        return loss
+    
+    def on_test_epoch_end(self):
+        labels = np.concatenate(np.array(self.labels, dtype = object))
+        predictions = np.concatenate(np.array(self.predictions, dtype = object))
+        acc = sum(labels == predictions)/len(labels)
+
+        labels = labels.tolist()
+        predictions = predictions.tolist()
+        loss = sum(self.losses)/len(self.losses)
+
+        self.log('test_epoch_acc', acc)
+        self.log('test_epoch_loss', loss)
+        
+        self.losses.clear()
+        self.labels.clear()
+        self.predictions.clear()
+
+    def predict_step(self, batch, batch_idx):
+        inputs, img = batch
+        output = self.model(inputs)
+        _, pred_cls = torch.max(output, 1)
+
+        return pred_cls.detach().cpu().numpy(), img
+
+    def configure_optimizers(self):
+        return torch.optim.SGD(self.model.parameters(), lr=1e-3, momentum=0.9)
+
+
+if __name__ == "__main__":
+    seed_everything(CFG['SEED'])
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", type=str, default="resnet")
+    parser.add_argument("--mode", type=str, default="train")
+    parser.add_argument("--data_dir", type=str, default="./data/train", help="Path to the data directory")
+    parser.add_argument('--save_dir', type=str, default='./outputs/weights')
+    parser.add_argument("--batch_size", type=int, default=CFG['BATCH_SIZE'], help="Batch size")
+    parser.add_argument("--image_size", type=int, default=CFG['IMG_SIZE'], help="Image size")
+    parser.add_argument("--epochs", type=int, default=CFG['EPOCHS'], help="Number of epochs")
+    parser.add_argument('-c', '--ckpt_path', type=str, default='./outputs/weights/')
+    args = parser.parse_args()
