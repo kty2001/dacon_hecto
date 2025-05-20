@@ -2,4 +2,6 @@
 
 dataset
 !dataset/.gitkeep
-!dataset/*.csv
+!dataset/sample_submission.csv
+
+*.pth
