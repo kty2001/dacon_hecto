@@ -2,13 +2,27 @@
 ## Car Classification
 
 ### requirements
+<<<<<<< HEAD
 mine
+=======
+Mine
+```bash
+conda create -n hecto python=3.11 -y
+conda activate hecto
+conda install pytorch==2.5.1 torchvision==0.20.1 pytorch-cuda=11.8 -c pytorch -c nvidia -y
+conda install pandas tqdm scikit-learn wandb git -y
+conda install lightning -c conda-forge -y
+```
+
+Coworker's
+>>>>>>> c6163bbcf56d4547cb8c5321cee7a10f04a279b0
 ```bash
 conda create -n hecto1 python=3.12 -y
 conda activate hecto1
 conda install pytorch==2.5.1 torchvision==0.20.1 pytorch-cuda=11.8 -c pytorch -c nvidia -y
 conda install pandas tqdm scikit-learn wandb git -y
 conda install lightning -c conda-forge -y
+<<<<<<< HEAD
 
 ```
 
@@ -21,4 +35,7 @@ conda install pandas tqdm scikit-learn git -y
 conda install lightning -c conda-forge -y
 conda install easyocr -c conda-forge -y
 
+=======
+conda install easyocr -c conda-forge -y
+>>>>>>> c6163bbcf56d4547cb8c5321cee7a10f04a279b0
 ```
