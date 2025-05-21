@@ -1,6 +1,12 @@
 # Ignore Files & Folders
 
+*.pth
+__pycache__
+
 data/train
 data/test
 
-*.pth
+outputs/submissions/*
+!outputs/submissions/.gitkeep
+outputs/weights/*
+!outputs/weights/.gitkeep
