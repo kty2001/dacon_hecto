@@ -1,0 +1,297 @@
+{
+    "os": "Linux-5.15.0-139-generic-x86_64-with-glibc2.35",
+    "python": "3.11.11",
+    "heartbeatAt": "2025-05-22T14:44:55.292466",
+    "startedAt": "2025-05-22T14:44:54.416540",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--model",
+        "resnet",
+        "--mode",
+        "train"
+    ],
+    "state": "running",
+    "program": "/root/dacon_hecto/main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "https://github.com/kty2001/dacon_hecto.git",
+        "commit": "7d74802af28360e187ea8dab3f42fd3c3532b8bb"
+    },
+    "email": "tyyoujungzz@naver.com",
+    "root": "/root/dacon_hecto",
+    "host": "70ed77acfd82",
+    "username": "root",
+    "executable": "/root/miniconda3/envs/hecto/bin/python",
+    "cpu_count": 20,
+    "cpu_count_logical": 40,
+    "cpu_freq": {
+        "current": 2.154725,
+        "min": 1000.0,
+        "max": 3200.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.399,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.887,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.899,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.899,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.899,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.899,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.899,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.899,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.1,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 2.9,
+            "min": 1000.0,
+            "max": 3200.0
+        },
+        {
+            "current": 1.0,
+            "min": 1000.0,
+            "max": 3200.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 814.8070297241211,
+            "used": 741.1378173828125
+        }
+    },
+    "gpu": "NVIDIA RTX A4000",
+    "gpu_count": 12,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        },
+        {
+            "name": "NVIDIA RTX A4000",
+            "memory_total": 17171480576
+        }
+    ],
+    "memory": {
+        "total": 471.8008460998535
+    }
+}
