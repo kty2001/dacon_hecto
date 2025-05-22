@@ -6,9 +6,9 @@ import torch
 
 
 CFG = {
-    'IMG_SIZE': 224,
-    'BATCH_SIZE': 256,
-    'EPOCHS': 10,
+    'IMG_SIZE': 256,
+    'BATCH_SIZE': 192,
+    'EPOCHS': 100,
     'LEARNING_RATE': 1e-4,
     'SEED' : 42
 }

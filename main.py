@@ -142,8 +142,8 @@ def main(model, mode, data_dir, save_dir, ckpt_path):
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
 
-        trainer.fit(model, CarDataModule(data_dir, transform=transform, batch_size=64, image_size=256, mode='train'))
-        trainer.test(model, CarDataModule(data_dir, transform=transform, batch_size=64, image_size=256, mode='train'))
+        trainer.fit(model, CarDataModule(data_dir, transform=transform, batch_size=CFG['BATCH_SIZE'], mode='train'))
+        trainer.test(model, CarDataModule(data_dir, transform=transform, batch_size=CFG['BATCH_SIZE'], mode='train'))
     # else:
     #     trainer = L.Trainer(
     #         accelerator='gpus',

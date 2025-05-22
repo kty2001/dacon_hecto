@@ -16,12 +16,11 @@ from src.utils import CFG, seed_everything
 seed_everything(CFG['SEED'])
 
 class CarDataModule(L.LightningDataModule):
-    def __init__(self, data_dir, transform=None, batch_size=32, image_size=256, mode='train'):
+    def __init__(self, data_dir, transform=None, batch_size=32, mode='train'):
         super().__init__()
         self.data_dir = data_dir # ./data/train
         self.transform = transform
         self.batch_size = batch_size
-        self.image_size = image_size
         self.mode = mode
 
 
