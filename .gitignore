@@ -1,7 +1,10 @@
 # Ignore Files & Folders
 
 *.pth
+*.ckpt
 __pycache__
+wandb
+lightning_logs
 
 data/train
 data/test

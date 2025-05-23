@@ -18,11 +18,11 @@ seed_everything(CFG['SEED'])
 class CarDataModule(L.LightningDataModule):
     def __init__(self, data_dir, transform=None, batch_size=32, mode='train'):
         super().__init__()
-        self.data_dir = data_dir # ./data/train
+        self.train_dir = os.path.join(data_dir, 'train')
+        self.pred_dir = os.path.join(data_dir, 'test')
         self.transform = transform
         self.batch_size = batch_size
         self.mode = mode
-
 
     def setup(self, stage=None):
         if self.trainer is not None:
@@ -32,7 +32,7 @@ class CarDataModule(L.LightningDataModule):
             self.batch_size_per_device = self.batch_size // self.trainer.world_size
 
         if self.mode == 'train':
-            data_list = glob.glob(os.path.join(self.data_dir, '*', '*.jpg'))
+            data_list = glob.glob(os.path.join(self.train_dir, '*', '*.jpg'))
             target_list = [os.path.basename(os.path.dirname(p)) for p in data_list]
             
             train_x, val_x, train_y, val_y = train_test_split(data_list, target_list, test_size=0.2, stratify=target_list, random_state=42)
@@ -41,8 +41,9 @@ class CarDataModule(L.LightningDataModule):
             train_data = [(x, y) for x, y in zip(train_x, train_y)]
             val_data = [(x, y) for x, y in zip(val_x, val_y)]
             test_data = [(x, y) for x, y in zip(test_x, test_y)]
-        else:
-            pred_data = test_data[0]
+        elif self.mode == 'pred':
+            data_list = glob.glob(os.path.join(self.pred_dir, '*.jpg'))
+            pred_data = [self.transform(Image.open(img).convert('RGB')) for img in data_list]
 
         if stage == 'fit':
             self.train_dataset = train_data
@@ -58,11 +59,6 @@ class CarDataModule(L.LightningDataModule):
         labels = torch.tensor([int(label) for label in labels], dtype=torch.long)
         return torch.stack(images), labels
     
-    def _predict_collate_fn(self, batch):
-        img = batch[0]
-        input = self.transform(img).unsqueeze(0)
-        return input, np.array(img)
-
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size_per_device, shuffle=True, collate_fn=self._train_collate_fn)
     
@@ -73,4 +69,4 @@ class CarDataModule(L.LightningDataModule):
         return DataLoader(self.test_dataset, batch_size=self.batch_size_per_device, shuffle=False, collate_fn=self._train_collate_fn)
     
     def predict_dataloader(self):
-        return DataLoader(self.pred_dataset, batch_size=self.batch_size_per_device, shuffle=False, collate_fn=self._predict_collate_fn) 
+        return DataLoader(self.pred_dataset, batch_size=self.batch_size_per_device, shuffle=False) 
